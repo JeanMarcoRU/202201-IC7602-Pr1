@@ -1,8 +1,32 @@
 version: '2'
+ 
 services:
-app:
-image: nginx:1.9
-volumes:
-- .:/usr/share/nginx/html/
-expose:
-- "80"
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    restart: always
+    networks:
+      - webproxy-network
+ 
+  whoami:
+    image: jwilder/whoami
+    networks:
+      - webproxy-network
+    environment:
+      - VIRTUAL_HOST=test.web
+  apache:
+    image: anibale/php7.3:apache
+    volumes:
+      - $HOME/Documentos/GitFiles/app-php/code:/var/www/html
+    external_links:
+      - db ##Link a una base de datos externa
+    networks:
+      - webproxy-network
+    environment:
+      - VIRTUAL_HOST=phplessons.web
+networks:
+    webproxy-network:
+      driver: bridge
