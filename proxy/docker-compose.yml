@@ -9,10 +9,10 @@ services:
       - 80:80
       - 443:443
 
-  networks:
-    sitio1:
-      external:
-        name: site1_default
-    sitio2:
-      external:
-        name: site2_default
+networks:
+  site1:
+    external:
+      name: site1_default
+  site2:
+    external:
+      name: site2_default
