@@ -9,7 +9,7 @@ services:
       dockerfile: Dockerfile
       args:
         MYARGUMENTO: "SOY UN ARGUMENTO DE Docker compose"
-    container_name: nginx_svc #172.18.0.3
+    container_name: nginx_svc1 #172.18.0.3
     restart: always
     environment:
       MYVARIABLE: "este es un mensaje desde docker compose"
@@ -31,12 +31,12 @@ services:
       dockerfile: Dockerfile
       args:
         MYARGUMENTO: "SOY UN ARGUMENTO DE Docker compose"
-    container_name: nginx_scv2 #172.18.0.2
+    container_name: nginx_svc2 #172.18.0.2
     restart: always
     environment:
       MYVARIABLE: "este es un mensaje desde docker compose"
     ports:
-      - "8180:80"
+      - "8080:80"
     volumes:
       - ./app2:/usr/share/nginx/html
     networks:
