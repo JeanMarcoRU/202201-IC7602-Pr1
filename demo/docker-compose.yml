@@ -3,8 +3,8 @@ version: '2'  #sudo docker-compose up -d
 services:
   dhcp1:
     networks:
-      web1:
-        ipv4_address: 10.0.0.0
+      nginx_network:
+        ipv4_address: 10.0.0.4
     build: ./dhcp1/
     restart: unless-stopped
     volumes:
@@ -13,8 +13,8 @@ services:
     build: ./dhcp2/
     restart: unless-stopped
     networks:
-      web2:
-        ipv4_address: 10.0.1.0
+      nginx_network2:
+        ipv4_address: 10.0.1.5
     volumes:
       - ./dhcp2/dhcpd.conf:/etc/dhcp/dhcpd.conf  
   nginx-proxy:
@@ -62,24 +62,24 @@ services:
         aliases:  
           - nginx_hoster #nombre de contenedor para hacer ping        
 
-  nginx2:
-    build: 
-      context: .
-      dockerfile: Dockerfile
-      args:
-        MYARGUMENTO: "SOY UN ARGUMENTO DE Docker compose"
-    container_name: nginx_svc2 #172.18.0.2
-    restart: always
-    environment:
-      MYVARIABLE: "este es un mensaje desde docker compose"
-    ports:
-      - "8080:80"
-    volumes:
-      - ./app2:/usr/share/nginx/html
-    networks:
-      nginx_network2:
-        aliases:
-          - nginx2_hoster #nombre de contenedor para hacer ping 
+  # nginx2:
+  #   build: 
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     args:
+  #       MYARGUMENTO: "SOY UN ARGUMENTO DE Docker compose"
+  #   container_name: nginx_svc2 #172.18.0.2
+  #   restart: always
+  #   environment:
+  #     MYVARIABLE: "este es un mensaje desde docker compose"
+  #   ports:
+  #     - "8080:80"
+  #   volumes:
+  #     - ./app2:/usr/share/nginx/html
+  #   networks:
+  #     nginx_network2:
+  #       aliases:
+  #         - nginx2_hoster #nombre de contenedor para hacer ping   
          
 volumes:
   app: {}
@@ -87,13 +87,9 @@ volumes:
 
 networks:
   nginx_network:
-    name: nginx_net
-    driver: bridge
-    ipam:
-      driver: default
+    external:
+      name: VLAN1
 
   nginx_network2:
-    name: nginx_net2
-    driver: bridge
-    ipam:
-      driver: default
+    external:
+      name: VLAN2
