@@ -1,6 +1,7 @@
 version: '3.7' #sudo docker-compose up -d
 
 services:
+
   dhcp1:
     networks:
       web1:
@@ -17,6 +18,7 @@ services:
         ipv4_address: 10.0.1.0
     volumes:
       - ./dhcp2/dhcpd.conf:/etc/dhcp/dhcpd.conf  
+
   nginx-proxy:
     image: jwilder/nginx-proxy
     ports:
