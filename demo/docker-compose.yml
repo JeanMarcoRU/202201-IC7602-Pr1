@@ -1,4 +1,4 @@
-version: '2'  #sudo docker-compose up -d
+version: '3.7' #sudo docker-compose up -d
 
 services:
   nginx-proxy:
@@ -9,7 +9,8 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
 
-  web1: #curl -H "Host: web1.local" localhost
+  web1:
+    #curl -H "Host: web1.local" localhost
     image: nginx
     volumes:
       - ./app:/usr/share/nginx/html
@@ -17,8 +18,9 @@ services:
       - "80"
     environment:
       - VIRTUAL_HOST=web1.local
-  
-  web2: #curl -H "Host: web2.local" localhost
+
+  web2:
+    #curl -H "Host: web2.local" localhost
     image: nginx
     volumes:
       - ./app2:/usr/share/nginx/html
@@ -33,7 +35,7 @@ services:
       dockerfile: Dockerfile
       args:
         MYARGUMENTO: "SOY UN ARGUMENTO DE Docker compose"
-    container_name: nginx_svc1 #172.18.0.3
+    container_name: nginx_svc #172.18.0.3
     restart: always
     environment:
       MYVARIABLE: "este es un mensaje desde docker compose"
@@ -44,7 +46,10 @@ services:
     networks:
       nginx_network:
         aliases:  
-          - nginx_hoster #nombre de contenedor para hacer ping        
+          - nginx_hoster #nombre de contenedor para hacer ping 
+
+
+
 
   nginx2:
     build: 
@@ -52,19 +57,20 @@ services:
       dockerfile: Dockerfile
       args:
         MYARGUMENTO: "SOY UN ARGUMENTO DE Docker compose"
-    container_name: nginx_svc2 #172.18.0.2
+    container_name: nginx_scv2 #172.18.0.2
     restart: always
     environment:
       MYVARIABLE: "este es un mensaje desde docker compose"
     ports:
-      - "8080:80"
+      - "8180:80"
     volumes:
       - ./app2:/usr/share/nginx/html
     networks:
       nginx_network2:
         aliases:
           - nginx2_hoster #nombre de contenedor para hacer ping 
-         
+
+
 volumes:
   app: {}
   app2: {}
