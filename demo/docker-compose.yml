@@ -2,22 +2,23 @@ version: '3.7' #sudo docker-compose up -d
 
 services:
 
-  dhcp1:
-    networks:
-      web1:
-        ipv4_address: 10.0.0.0
-    build: ./dhcp1/
-    restart: unless-stopped
-    volumes:
-      - ./dhcp1/dhcpd.conf:/etc/dhcp/dhcpd.conf   
-  dhcp2:
-    build: ./dhcp2/
-    restart: unless-stopped
-    networks:
-      web2:
-        ipv4_address: 10.0.1.0
-    volumes:
-      - ./dhcp2/dhcpd.conf:/etc/dhcp/dhcpd.conf  
+#  dhcp1:
+#    networks:
+#      web1:
+#        ipv4_address: 10.0.0.0
+#    build: ./dhcp1/
+#    restart: unless-stopped
+#    volumes:
+#      - ./dhcp1/dhcpd.conf:/etc/dhcp/dhcpd.conf   
+      
+#  dhcp2:
+#    build: ./dhcp2/
+#    restart: unless-stopped
+#    networks:
+#      web2:
+#        ipv4_address: 10.0.1.0
+#    volumes:
+#      - ./dhcp2/dhcpd.conf:/etc/dhcp/dhcpd.conf  
 
   nginx-proxy:
     image: jwilder/nginx-proxy
@@ -43,7 +44,7 @@ services:
     volumes:
       - ./app2:/usr/share/nginx/html
     expose:
-      - "443"
+      - "80"
     environment:
       - VIRTUAL_HOST=web2.local
 
@@ -62,9 +63,9 @@ services:
     volumes:
       - ./app:/usr/share/nginx/html
     networks:
-      nginx_network:
-        aliases:  
-          - nginx_hoster #nombre de contenedor para hacer ping 
+      static-network1:
+        ipv4_address: 10.0.0.21
+      
 
   nginx2:
     build: 
@@ -81,9 +82,9 @@ services:
     volumes:
       - ./app2:/usr/share/nginx/html
     networks:
-      nginx_network2:
-        aliases:
-          - nginx2_hoster #nombre de contenedor para hacer ping 
+      static-network2:
+        ipv4_address: 10.0.1.21
+
 
 
 volumes:
@@ -91,14 +92,12 @@ volumes:
   app2: {}
 
 networks:
-  nginx_network:
-    name: nginx_net
-    driver: bridge
+  static-network1:
     ipam:
-      driver: default
-
-  nginx_network2:
-    name: nginx_net2
-    driver: bridge
+      config:
+        - subnet: 10.0.0.0/24
+  
+  static-network2:
     ipam:
-      driver: default
+      config:
+        - subnet: 10.0.1.0/24
