@@ -85,8 +85,9 @@ services:
       static-network2:
         ipv4_address: 10.0.1.21
 
-
-
+# En caso de que se sobre lapen las redes
+# sudo docker network ls
+# sudo docker network rm my_network
 volumes:
   app: {}
   app2: {}
