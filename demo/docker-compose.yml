@@ -1,9 +1,9 @@
-version: '2'  #sudo docker-compose up -d
+version: '3.7' #sudo docker-compose up -d
 
 services:
   dhcp1:
     networks:
-      nginx_network:
+      static-network1:
         ipv4_address: 10.0.0.4
     build: ./dhcp1/
     restart: unless-stopped
@@ -13,7 +13,7 @@ services:
     build: ./dhcp2/
     restart: unless-stopped
     networks:
-      nginx_network2:
+      static-network2:
         ipv4_address: 10.0.1.5
     volumes:
       - ./dhcp2/dhcpd.conf:/etc/dhcp/dhcpd.conf  
@@ -25,7 +25,8 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
 
-  web1: #curl -H "Host: web1.local" localhost
+  web1:
+    #curl -H "Host: web1.local" localhost
     image: nginx
     volumes:
       - ./app:/usr/share/nginx/html
@@ -33,13 +34,14 @@ services:
       - "80"
     environment:
       - VIRTUAL_HOST=web1.local
-  
-  web2: #curl -H "Host: web2.local" localhost
+
+  web2:
+    #curl -H "Host: web2.local" localhost
     image: nginx
     volumes:
       - ./app2:/usr/share/nginx/html
     expose:
-      - "443"
+      - "80"
     environment:
       - VIRTUAL_HOST=web2.local
 
@@ -49,7 +51,7 @@ services:
       dockerfile: Dockerfile
       args:
         MYARGUMENTO: "SOY UN ARGUMENTO DE Docker compose"
-    container_name: nginx_svc1 #172.18.0.3
+    container_name: nginx_svc #172.18.0.3
     restart: always
     environment:
       MYVARIABLE: "este es un mensaje desde docker compose"
@@ -58,9 +60,9 @@ services:
     volumes:
       - ./app:/usr/share/nginx/html
     networks:
-      nginx_network:
-        aliases:  
-          - nginx_hoster #nombre de contenedor para hacer ping        
+      static-network1:
+        ipv4_address: 10.0.0.21
+      
 
   nginx2:
     build: 
@@ -68,28 +70,32 @@ services:
       dockerfile: Dockerfile
       args:
         MYARGUMENTO: "SOY UN ARGUMENTO DE Docker compose"
-    container_name: nginx_svc2 #172.18.0.2
+    container_name: nginx_scv2 #172.18.0.2
     restart: always
     environment:
       MYVARIABLE: "este es un mensaje desde docker compose"
     ports:
-      - "8080:80"
+      - "8180:80"
     volumes:
       - ./app2:/usr/share/nginx/html
     networks:
-      nginx_network2:
-        aliases:
-          - nginx2_hoster #nombre de contenedor para hacer ping   
-         
+      static-network2:
+        ipv4_address: 10.0.1.21
+
+# En caso de que se sobre lapen las redes
+# sudo docker network ls
+# sudo docker network rm my_network
 volumes:
   app: {}
   app2: {}
 
 networks:
-  nginx_network:
-    external:
-      name: VLAN1
-
-  nginx_network2:
-    external:
-      name: VLAN2
+  static-network1:
+    ipam:
+      config:
+        - subnet: 10.0.0.0/24
+  
+  static-network2:
+    ipam:
+      config:
+        - subnet: 10.0.1.0/24
