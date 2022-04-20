@@ -5,18 +5,18 @@ services:
     networks:
       static-network1:
         ipv4_address: 10.0.0.4
-    build: ./dhcp1/
+    image: networkboot/dhcpd
     restart: unless-stopped
     volumes:
-      - ./dhcp1/dhcpd.conf:/etc/dhcp/dhcpd.conf   
+      - ./dhcp1/dhcpd.conf:/data/dhcpd.conf
   dhcp2:
-    build: ./dhcp2/
+    image: networkboot/dhcpd
     restart: unless-stopped
     networks:
       static-network2:
         ipv4_address: 10.0.1.5
     volumes:
-      - ./dhcp2/dhcpd.conf:/etc/dhcp/dhcpd.conf  
+      - ./dhcp2/dhcpd.conf:/data/dhcpd.conf
   nginx-proxy:
     image: jwilder/nginx-proxy
     ports:
