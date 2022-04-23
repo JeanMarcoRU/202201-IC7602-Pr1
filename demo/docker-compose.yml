@@ -43,7 +43,7 @@ services:
     expose:
       - "80"
     environment:
-      - DEFAULT_HOST=web1.local
+      - VIRTUAL_HOST=web1.local
     networks:
       LAN_Virtual_1:
         ipv4_address: 10.0.0.21
@@ -57,7 +57,7 @@ services:
     expose:
       - "80"
     environment:
-      - DEFAULT_HOST=web2.local
+      - VIRTUAL_HOST=web2.local
     networks:
       LAN_Virtual_2:
         ipv4_address: 10.0.1.21
