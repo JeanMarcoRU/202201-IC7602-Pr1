@@ -24,12 +24,15 @@ services:
 
   # Proxy reverso | escucha en 80 y 443
   proxy_reverso:
-    image: jwilder/nginx-proxy
+    image: jwilder/nginx-proxy    #https://hub.docker.com/r/jwilder/nginx-proxy
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      LAN_Virtual_1:
+        ipv4_address: 10.0.0.20
 
   # Web server 1 | IP: 10.0.0.21
   web_server_1:
@@ -40,7 +43,7 @@ services:
     expose:
       - "80"
     environment:
-      - VIRTUAL_HOST=web1.local
+      - DEFAULT_HOST=web1.local
     networks:
       LAN_Virtual_1:
         ipv4_address: 10.0.0.21
@@ -54,7 +57,7 @@ services:
     expose:
       - "80"
     environment:
-      - VIRTUAL_HOST=web2.local
+      - DEFAULT_HOST=web2.local
     networks:
       LAN_Virtual_2:
         ipv4_address: 10.0.1.21
