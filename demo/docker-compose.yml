@@ -1,6 +1,7 @@
 version: '3.7' #sudo docker-compose up -d
 
 services:
+
   dhcp1:
     networks:
       static-network1:
@@ -9,6 +10,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./dhcp1/dhcpd.conf:/data/dhcpd.conf
+
   dhcp2:
     image: networkboot/dhcpd
     restart: unless-stopped
@@ -17,6 +19,7 @@ services:
         ipv4_address: 10.0.1.5
     volumes:
       - ./dhcp2/dhcpd.conf:/data/dhcpd.conf
+
   nginx-proxy:
     image: jwilder/nginx-proxy
     ports:
@@ -63,7 +66,6 @@ services:
       static-network1:
         ipv4_address: 10.0.0.21
       
-
   nginx2:
     build: 
       context: .
