@@ -5,7 +5,7 @@ services:
   # DHCP 1 | IP: 10.0.0.4
   dhcp1:
     networks:
-      static-network1:
+      LAN_Virtual_1:
         ipv4_address: 10.0.0.4
     image: networkboot/dhcpd
     restart: unless-stopped
@@ -17,13 +17,13 @@ services:
     image: networkboot/dhcpd
     restart: unless-stopped
     networks:
-      static-network2:
+      LAN_Virtual_2:
         ipv4_address: 10.0.1.5
     volumes:
       - ./dhcp2/dhcpd.conf:/data/dhcpd.conf
 
   # Proxy reverso | escucha en 80 y 443
-  nginx-proxy:
+  proxy_reverso:
     image: jwilder/nginx-proxy
     ports:
       - "80:80"
@@ -32,7 +32,7 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
 
   # Web server 1 | IP: 10.0.0.21
-  web1:
+  web_server_1:
     #curl -H "Host: web1.local" localhost
     image: nginx
     volumes:
@@ -42,11 +42,11 @@ services:
     environment:
       - VIRTUAL_HOST=web1.local
     networks:
-      static-network1:
+      LAN_Virtual_1:
         ipv4_address: 10.0.0.21
 
   # Web server 2 | IP: 10.0.1.21
-  web2:
+  web_server_2:
     #curl -H "Host: web2.local" localhost
     image: nginx
     volumes:
@@ -56,7 +56,7 @@ services:
     environment:
       - VIRTUAL_HOST=web2.local
     networks:
-      static-network2:
+      LAN_Virtual_2:
         ipv4_address: 10.0.1.21
 
 # En caso de que se sobre-lapen las redes
@@ -69,13 +69,13 @@ volumes:
 # LANs Virtuales 1 y 2
 networks:
   # LAN virtual 1 10.0.0.0/24
-  static-network1:
+  LAN_Virtual_1:
     ipam:
       config:
         - subnet: 10.0.0.0/24
-  
+
   # LAN virtual 2 10.0.1.0/24
-  static-network2:
+  LAN_Virtual_2:
     ipam:
       config:
         - subnet: 10.0.1.0/24
