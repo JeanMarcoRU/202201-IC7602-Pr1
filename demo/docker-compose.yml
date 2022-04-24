@@ -1,6 +1,11 @@
 version: '3.7' #sudo docker-compose up -d
 
 services:
+  cliente1:
+    networks:
+      - static-network1
+    image: ubuntu
+    command: tail -F anything
   dhcp1:
     networks:
       static-network1:
