@@ -3,7 +3,7 @@ version: '3.7' #sudo docker-compose up -d
 services:
   cliente1:
     networks:
-      - static-network1
+      - LAN_Virtual_1
     image: ubuntu
     command: tail -F anything
 
@@ -12,10 +12,9 @@ services:
     networks:
       LAN_Virtual_1:
         ipv4_address: 10.0.0.4
+    #network_mode: "host"
     image: networkboot/dhcpd
     restart: unless-stopped
-    environment:
-      - --net=host
     volumes:
       - ./dhcp1/dhcpd.conf:/data/dhcpd.conf
 
@@ -26,11 +25,10 @@ services:
     networks:
       LAN_Virtual_2:
         ipv4_address: 10.0.1.5
+    #network_mode: "host"
     volumes:
       - ./dhcp2/dhcpd.conf:/data/dhcpd.conf
-
-  # Proxy reverso | escucha en 80 y 443
-  proxy_reverso:
+proxy_reverso:
     image: jwilder/nginx-proxy    #https://hub.docker.com/r/jwilder/nginx-proxy
     ports:
       - "80:80"
