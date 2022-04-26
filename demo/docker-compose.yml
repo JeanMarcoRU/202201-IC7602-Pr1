@@ -1,6 +1,13 @@
 version: '3.7' #sudo docker-compose up -d
 
 services:
+  cliente1:
+    networks:
+      - LAN_Virtual_1
+    image: ubuntu
+    command: tail -F anything
+
+  # DHCP 1 | IP: 10.0.0.4
   dhcp1:
     #networks:
     #  LAN_Virtual_1:
@@ -11,15 +18,16 @@ services:
       network: LAN_Virtual_1
     restart: unless-stopped
     volumes:
-      - ./dhcp1/dhcpd.conf:/etc/dhcp/dhcpd.conf   
+      - ./dhcp1/dhcpd.conf:/data/dhcpd.conf
+
+  # DHCP 1 | IP: 10.0.1.5
   dhcp2:
     build: 
       context: ./dhcp2
       network: LAN_Virtual_2
+      
     restart: unless-stopped
-    networks:
-      static-network2:
-        ipv4_address: 10.0.1.5
+    network_mode: "host"
     volumes:
       - ./dhcp2/dhcpd.conf:/data/dhcpd.conf
   proxy_reverso:
@@ -32,6 +40,7 @@ services:
     networks:
       LAN_Virtual_1:
         ipv4_address: 10.0.0.20
+
   # Web server 1 | IP: 10.0.0.21
   web_server_1:
     #curl -H "Host: web1.local" localhost
@@ -42,8 +51,12 @@ services:
       - "80"
     environment:
       - VIRTUAL_HOST=web1.local
+    networks:
+      LAN_Virtual_1:
+        ipv4_address: 10.0.0.21
 
-  web2:
+  # Web server 2 | IP: 10.0.1.21
+  web_server_2:
     #curl -H "Host: web2.local" localhost
     image: nginx
     volumes:
@@ -52,58 +65,27 @@ services:
       - "80"
     environment:
       - VIRTUAL_HOST=web2.local
-
-  nginx:
-    build: 
-      context: .
-      dockerfile: Dockerfile
-      args:
-        MYARGUMENTO: "SOY UN ARGUMENTO DE Docker compose"
-    container_name: nginx_svc #172.18.0.3
-    restart: always
-    environment:
-      MYVARIABLE: "este es un mensaje desde docker compose"
-    ports:
-      - "8080:80"
-    volumes:
-      - ./app:/usr/share/nginx/html
     networks:
-      static-network1:
-        ipv4_address: 10.0.0.21
-      
-
-  nginx2:
-    build: 
-      context: .
-      dockerfile: Dockerfile
-      args:
-        MYARGUMENTO: "SOY UN ARGUMENTO DE Docker compose"
-    container_name: nginx_scv2 #172.18.0.2
-    restart: always
-    environment:
-      MYVARIABLE: "este es un mensaje desde docker compose"
-    ports:
-      - "8180:80"
-    volumes:
-      - ./app2:/usr/share/nginx/html
-    networks:
-      static-network2:
+      LAN_Virtual_2:
         ipv4_address: 10.0.1.21
 
-# En caso de que se sobre lapen las redes
+# En caso de que se sobre-lapen las redes
 # sudo docker network ls
 # sudo docker network rm my_network
 volumes:
   app: {}
   app2: {}
 
+# LANs Virtuales 1 y 2
 networks:
-  static-network1:
+  # LAN virtual 1 10.0.0.0/24
+  LAN_Virtual_1:
     ipam:
       config:
         - subnet: 10.0.0.0/24
-  
-  static-network2:
+
+  # LAN virtual 2 10.0.1.0/24
+  LAN_Virtual_2:
     ipam:
       config:
         - subnet: 10.0.1.0/24
