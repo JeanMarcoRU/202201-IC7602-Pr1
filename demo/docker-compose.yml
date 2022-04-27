@@ -22,7 +22,7 @@ services:
       - ./dhcp2/data:/data
 
   proxy_reverso:
-    image: jwilder/nginx-proxy    #https://hub.docker.com/r/jwilder/nginx-proxy
+    image: jwilder/nginx-proxy #https://hub.docker.com/r/jwilder/nginx-proxy
     ports:
       - "80:80"
       - "443:443"
@@ -59,7 +59,7 @@ services:
     networks:
       LAN_Virtual_2:
         ipv4_address: 10.0.1.21
-  
+
   #cliente 1
   cliente1:
     networks:
@@ -73,6 +73,20 @@ services:
       - LAN_Virtual_2
     image: ubuntu
     command: bash -c "apt update && apt install -y iproute2 && apt install -y udhcpc && udhcpc eth0 && tail -F anything"
+
+  #DNS - https://www.techrepublic.com/article/how-to-define-dns-in-docker-containers/
+  service:
+    # docker exec -it rabbitmq bash 
+    # cat /etc/resolv.conf
+    dns:
+      - "8.8.8.8"
+      - "8.8.8.9"
+    network_mode: "bridge"
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "15672:15672"
 
 # En caso de que se sobre-lapen las redes
 # sudo docker network ls
