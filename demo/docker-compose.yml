@@ -82,7 +82,7 @@ services:
       - "8.8.8.8"
       - "8.8.8.9"
     network_mode: "bridge"
-    image: rabbitmq:3-management
+    image: rabbitmq:3-management #https://hub.docker.com/_/rabbitmq?tab=description
     container_name: rabbitmq
     hostname: rabbitmq
     ports:
