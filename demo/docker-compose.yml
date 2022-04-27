@@ -60,11 +60,14 @@ services:
       LAN_Virtual_2:
         ipv4_address: 10.0.1.21
   
+  #cliente 1
   cliente1:
     networks:
       - LAN_Virtual_1
     image: ubuntu
     command: bash -c "apt update && apt install -y iproute2 && apt install -y udhcpc && udhcpc eth0 && tail -F anything"
+
+  #cliente 2
   cliente2:
     networks:
       - LAN_Virtual_2
