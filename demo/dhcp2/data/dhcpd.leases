@@ -4,5 +4,15 @@
 # authoring-byte-order entry is generated, DO NOT DELETE
 authoring-byte-order little-endian;
 
-server-duid "\000\001\000\001)\372\021\321\002B\250XcT";
-
+lease 10.0.1.200 {
+  starts 3 2022/04/27 06:46:21;
+  ends 4 2022/04/28 06:46:21;
+  tstp 4 2022/04/28 06:46:21;
+  cltt 3 2022/04/27 06:46:21;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 02:42:0a:00:01:02;
+  uid "\001\002B\012\000\001\002";
+  set vendor-class-identifier = "udhcp 1.30.1";
+}
