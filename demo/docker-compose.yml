@@ -1,11 +1,6 @@
 version: '3.7' #sudo docker-compose up -d
 
 services:
-  cliente1:
-    networks:
-      - LAN_Virtual_1
-    image: ubuntu
-    command: tail -F anything
 
   # DHCP 1 | IP: 10.0.0.4
   dhcp1:
@@ -68,6 +63,52 @@ services:
     networks:
       LAN_Virtual_2:
         ipv4_address: 10.0.1.21
+
+  #cliente 1
+  cliente1:
+    networks:
+      - LAN_Virtual_1
+    build: ./dhclient1
+    depends_on:
+      - dhcp1
+    privileged: true
+    command: bash -c "dhclient -s 10.0.0.4 -nw && tail -F duermase"
+    volumes:
+      - ./dhclient1/environment:/etc/environment
+
+  #cliente 2
+  cliente2:
+    networks:
+      - LAN_Virtual_2
+    build: ./dhclient2
+    depends_on:
+      - dhcp1
+    privileged: true #Debe ser privilegiado para que dhclient no de error
+    command: bash -c "dhclient -s 10.0.1.5 -nw && tail -F duermase"
+    volumes:
+      - ./dhclient2/environment:/etc/environment
+  
+  web_cache:
+    image: clue/polipo
+    networks:
+      LAN_Virtual_1:
+        ipv4_address: 10.0.0.7
+    ports:
+      - "8443:8443"
+
+  #DNS - https://www.techrepublic.com/article/how-to-define-dns-in-docker-containers/
+  service:
+    # docker exec -it rabbitmq bash 
+    # cat /etc/resolv.conf
+    dns:
+      - "8.8.8.8"
+      - "8.8.8.9"
+    network_mode: "bridge"
+    image: rabbitmq:3-management #https://hub.docker.com/_/rabbitmq?tab=description
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "15672:15672"
 
 # En caso de que se sobre-lapen las redes
 # sudo docker network ls
