@@ -68,6 +68,31 @@ Ahora se muestran los resultados de la prueba realizada con el web server 2:
 ![imagen](https://github.com/JeanMarcoRU/202201-IC7602-Pr1/blob/main/pruebas/test2.jpeg)
 Con esta prueba, la cual sitúa el tiempo promedio de atención a las requests en 11 ms, con lo cual queda en evidencia la mejoría.
 
+## Recomendaciones
+
+Como parte del proceso de aprendizaje y conservación de lo aprendido se proceden a enumerar 10 recomendaciones que nuestro equipo de trabajo da a cualquiera interesado en replicar este proyecto o hacer uno similar:
+
+1. Es muy util saber manejar la consola de comandos principalmente de ubuntu, por lo que se recomienda haber llevado por lo menos un curso introductorio al uso de la consola de comandos.
+2. Para asegurar la robustez de la red que se planea diseñar es importante realizar diagramas y tener clara toda la especificación, para nosotros fue particularmente útil el diagrama en el que se muestran todos los componentes del proyecto con sus respectivos IPs estáticos (Excepto por los clientes, ellos le solicitan al DHCP una IP según el rango especificado en la misma imagen).
+3. Se debe estar seguros de las bases del proyecto, por lo que investigar el funcionamiento de docker, docker-compose y además el networking con docker.
+4. Recomendamos trabajar directamente desde Linux, particularmente con Ubuntu fue el sistema operativo con el que trabajamos.
+5. Se recomienda navegar ampliamente por las imágenes ya construidas que dispone docker, ya que pueden disminuir el trabajo de levantar los servidores teniendo que ejecutar tal vez una serie de comandos no muy corta.
+
+## Conclusiones
+
+Como parte de este proyecto se llegaron a una serie de conclusiones las cuales a continuación se detallan:
+
+1. Para configurar servidores es fundamental el manejo de comandos para la puesta en marcha de los mismos.
+2. Docker es un robusto sistema para el manejo de contenedores del tipo que se manejan en este proyecto, cada uno con su imagen inicial ya sea de un sistema operativo o de algún servidor especial como los DHCP o DNS.
+3. Se logró implementar la gran mayoría de lo solicitado en el enunciado del proyecto, por lo que nuestros conocimientos en diseño e implementación de redes se ha visto ámpliamente beneficiado.
+4. Se logró la implementación y configuración de routers, servidores DHCP, DNS y VPN.
+5. Se consiguió implementar las reglas de enrutamiento especificadas y requeridas para la comunicación de la red.
+6. Se implementaron reglas de firewall para validar la seguridad de la red.
+7. Se implementó un proxy reverso cuya respuesta viene dada por un set de servicios (los cuales en este caso son dos páginas web), ya que estos están expuestos en la misma dirección de dominio y puerto. Se consigue acceder primero a uno y luego al otro cada vez que se recarga la página.
+8. Se logra probar la funcionalidad de la red por medio de los web servers y de los clientes de la red.
+9. Se logró automatizar la configuración de cada uno de los servidores por medio de shell scripts y docker-compose.
+10. Se probaron las herramientas de diagnostico de redes y se validó el funcionamiento de cada parte.
+
 ###
 
 Comandos
