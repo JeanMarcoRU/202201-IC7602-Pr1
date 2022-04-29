@@ -82,6 +82,7 @@ services:
       - dhcp1
     privileged: true
     command: bash -c "dhclient -s 10.0.0.4 -nw && tail -F duermase"
+    container_name: cliente1
 
   #cliente 2
   cliente2:
@@ -92,7 +93,8 @@ services:
       - dhcp1
     privileged: true
     command: bash -c "dhclient -s 10.0.1.5 -nw && tail -F duermase"
-
+    container_name: cliente2
+  
   #DNS - https://www.techrepublic.com/article/how-to-define-dns-in-docker-containers/
   service:
     # docker exec -it rabbitmq bash 
