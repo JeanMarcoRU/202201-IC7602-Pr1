@@ -66,6 +66,7 @@ El web cache funciona para que no sea necesario trasmitir la totalidad de los da
 En la imagen anterior se logra apreciar que la media del total de atención a las requests es de 8 ms.
 Ahora se muestran los resultados de la prueba realizada con el web server 2:
 ![imagen](https://github.com/JeanMarcoRU/202201-IC7602-Pr1/blob/main/pruebas/test2.jpeg)
+Con esta prueba, la cual sitúa el tiempo promedio de atención a las requests en 11 ms, con lo cual queda en evidencia la mejoría.
 
 ###
 
