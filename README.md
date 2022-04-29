@@ -61,7 +61,14 @@ Y después recargando la página:
 
 ### Prueba del web cache
 
-El web cache funciona para que no sea necesario trasmitir la totalidad de los datos de los sitios a los que se suelen hacer visitas, con lo que si se implementa este cache se lograrán tiempos de respuesta más bajos cuando las solicitudes al sitio sean reiteradas. En este contexto, se le enviaron 10000 requests en grupos de 100 por medio del software de testing llamado ApacheBench, primero al web server 1 (el cual implementa el web cache) y después al web server 2 (el cual no tiene cache) y se obtuvieron los siguientes resultados:
+El web cache funciona para que no sea necesario trasmitir la totalidad de los datos de los sitios a los que se suelen hacer visitas, con lo que si se implementa este cache se lograrán tiempos de respuesta más bajos cuando las solicitudes al sitio sean reiteradas. En este contexto, se le enviaron 10000 requests en grupos de 100 por medio del software de testing llamado ApacheBench y del siguiente comando:
+
+```
+ab -c 100 -n 10000 http://10.0.0.20/web1/
+ab -c 100 -n 10000 http://10.0.0.20/web2/
+```
+
+Primero se hizo la prueba al web server 1 (el cual implementa el web cache) y después al web server 2 (el cual no tiene cache) y se obtuvieron los siguientes resultados:
 ![imagen](https://github.com/JeanMarcoRU/202201-IC7602-Pr1/blob/main/pruebas/test1.jpeg)
 En la imagen anterior se logra apreciar que la media del total de atención a las requests es de 8 ms.
 Ahora se muestran los resultados de la prueba realizada con el web server 2:
@@ -74,9 +81,11 @@ Como parte del proceso de aprendizaje y conservación de lo aprendido se procede
 
 1. Es muy util saber manejar la consola de comandos principalmente de ubuntu, por lo que se recomienda haber llevado por lo menos un curso introductorio al uso de la consola de comandos.
 2. Para asegurar la robustez de la red que se planea diseñar es importante realizar diagramas y tener clara toda la especificación, para nosotros fue particularmente útil el diagrama en el que se muestran todos los componentes del proyecto con sus respectivos IPs estáticos (Excepto por los clientes, ellos le solicitan al DHCP una IP según el rango especificado en la misma imagen).
-3. Se debe estar seguros de las bases del proyecto, por lo que investigar el funcionamiento de docker, docker-compose y además el networking con docker.
-4. Recomendamos trabajar directamente desde Linux, particularmente con Ubuntu fue el sistema operativo con el que trabajamos.
-5. Se recomienda navegar ampliamente por las imágenes ya construidas que dispone docker, ya que pueden disminuir el trabajo de levantar los servidores teniendo que ejecutar tal vez una serie de comandos no muy corta.
+3. Se recomienda en gran medida el uso de Docker como herramienta de virtualización de ambientes y serialización de recursos la cual permite estandarizar los elementos para una óptima implementación ya que gracias a esta tecnología logramos dividir el proyecto basándonos en la estrategia "divide y vencerás" y luego no tuvimos muchos problemas a la hora de integrar los diferentes elementos. Particularmente útil para segregar el trabajo por realizar entre varios miembros del equipo.
+4. Se debe estar seguros de las bases del proyecto, por lo que investigar el funcionamiento de docker, docker-compose y además el networking con docker.
+5. Recomendamos trabajar directamente desde Linux, particularmente con Ubuntu fue el sistema operativo con el que trabajamos.
+6. Se recomienda navegar ampliamente por las imágenes ya construidas que dispone docker, ya que pueden disminuir el trabajo de levantar los servidores teniendo que ejecutar tal vez una serie de comandos no muy corta.
+7. [Digital ocean](https://www.digitalocean.com) dispone de tutoriales en el ámbito de computación muy útiles y atinados para la puesta en marcha de servidores y para la aplicación de muchas tecnologías.
 
 ## Conclusiones
 
