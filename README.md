@@ -50,7 +50,11 @@ docker exec -it cliente1 ip a
 
 Y observar en la penúltima línea del resultado de la ejecución anterior el IP en rango especificado en el enunciado del proyecto, como muestra la siguente imagen, el IP 10.0.0.101
 
-![imagen]()
+![imagen](https://github.com/JeanMarcoRU/202201-IC7602-Pr1/blob/main/pruebas/cliente1%20ip%20address.png)
+
+### Prueba del proxy reverso
+
+Este contenedor tiene una funcionalidad particular la cual es que da respuesta de forma intercalada entre la página web 1 y la página web 2, por lo que cada vez que se accede al sitio con ip 10.0.0.20, la respuesta varía con respecto a la anterior, como se muestra a continuación:
 
 ###
 
