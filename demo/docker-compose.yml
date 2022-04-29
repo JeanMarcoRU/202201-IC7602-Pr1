@@ -23,6 +23,13 @@ services:
 
   #proxy reverso
   proxy_reverso:
+    #si se entra al ip del proxy (http://10.0.0.20/) y se recarga (f5) hace round robin entre los servidores
+
+    #ab -c 100 -n 10000 http://10.0.0.20/web2/
+
+    #web cache aqui, mejoria de casi un 50%
+    #ab -c 100 -n 10000 http://10.0.0.20/web1/ 
+
     image: nginx #https://hub.docker.com/r/jwilder/nginx-proxy
     volumes:
       - ./proxy/default.conf:/etc/nginx/conf.d/default.conf
