@@ -54,7 +54,18 @@ Y observar en la penúltima línea del resultado de la ejecución anterior el IP
 
 ### Prueba del proxy reverso
 
-Este contenedor tiene una funcionalidad particular la cual es que da respuesta de forma intercalada entre la página web 1 y la página web 2, por lo que cada vez que se accede al sitio con ip 10.0.0.20, la respuesta varía con respecto a la anterior, como se muestra a continuación:
+Este contenedor tiene una funcionalidad particular la cual es que da respuesta de forma intercalada entre la página web 1 y la página web 2, por lo que cada vez que se accede al sitio con ip 10.0.0.20, la respuesta varía con respecto a la anterior, como se ilustra en las siguientes dos imágenes, este es el resultado de la primera consulta:
+![imagen](https://github.com/JeanMarcoRU/202201-IC7602-Pr1/blob/main/pruebas/request1.png)
+Y después recargando la página:
+![imagen](https://github.com/JeanMarcoRU/202201-IC7602-Pr1/blob/main/pruebas/request2.png)
+
+### Prueba del web cache
+
+El web cache funciona para que no sea necesario trasmitir la totalidad de los datos de los sitios a los que se suelen hacer visitas, con lo que si se implementa este cache se lograrán tiempos de respuesta más bajos cuando las solicitudes al sitio sean reiteradas. En este contexto, se le enviaron 10000 requests en grupos de 100 por medio del software de testing llamado ApacheBench, primero al web server 1 (el cual implementa el web cache) y después al web server 2 (el cual no tiene cache) y se obtuvieron los siguientes resultados:
+![imagen](https://github.com/JeanMarcoRU/202201-IC7602-Pr1/blob/main/pruebas/test1.png)
+En la imagen anterior se logra apreciar que la media del total de atención a las requests es de 8 ms.
+Ahora se muestran los resultados de la prueba realizada con el web server 2:
+![imagen](https://github.com/JeanMarcoRU/202201-IC7602-Pr1/blob/main/pruebas/test2.png)
 
 ###
 
