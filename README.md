@@ -57,7 +57,7 @@ Y observar en la penúltima línea del resultado de la ejecución anterior el IP
 Este contenedor tiene una funcionalidad particular la cual es que da respuesta de forma intercalada entre la página web 1 y la página web 2, por lo que cada vez que se accede al sitio con ip 10.0.0.20, la respuesta varía con respecto a la anterior, como se ilustra en las siguientes dos imágenes, este es el resultado de la primera consulta:
 ![imagen](https://github.com/JeanMarcoRU/202201-IC7602-Pr1/blob/main/pruebas/request1.jpeg)
 Y después recargando la página:
-![imagen](https://github.com/JeanMarcoRU/202201-IC7602-Pr1/blob/main/pruebas/request2.jpeg)
+![image](https://user-images.githubusercontent.com/15478613/166093183-75e9f221-beaf-42ab-8852-6be65a624282.png)
 
 ### Prueba del web cache
 
