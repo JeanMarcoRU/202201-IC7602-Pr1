@@ -16,7 +16,7 @@ command: >-
 
 
 command: >-
-      sh -c "iptables --append FORWARD --protocol icmp --icmp-type any --src 10.0.0.6 --dst 10.0.0.5 --jump ACCEPT &&
-      iptables --append FORWARD --protocol tcp --src 10.0.0.6 --sport 80 --dst 10.0.0.5 --jump ACCEPT &&
-      iptables --append FORWARD --protocol tcp --src 10.0.0.6 --sport 443 --dst 10.0.0.5 --jump ACCEPT &&     
+      sh -c "iptables --append FORWARD --protocol icmp --icmp-type any --src 10.0.1.6 --dst 10.0.0.5 --jump ACCEPT &&
+      iptables --append FORWARD --protocol tcp --src 10.0.1.6 --sport 80 --dst 10.0.0.5 --jump ACCEPT &&
+      iptables --append FORWARD --protocol tcp --src 10.0.1.6 --sport 443 --dst 10.0.0.5 --jump ACCEPT &&     
       tail -f /dev/null"
