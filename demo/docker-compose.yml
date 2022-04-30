@@ -2,8 +2,7 @@ version: '3.7' #sudo docker-compose up -d
 
 services:
   # DHCP 1 | IP: 10.0.0.4
-  dhcp1:
-    command: sh -c "ip route replace default via 10.0.0.5"
+  dhcp1:    
     networks:
       LAN_Virtual_1:
         ipv4_address: 10.0.0.4
@@ -14,7 +13,6 @@ services:
 
   # DHCP 2 | IP: 10.0.1.5
   dhcp2:
-    command: sh -c "ip route replace default via 10.0.1.6"
     networks:
       LAN_Virtual_2:
         ipv4_address: 10.0.1.5
@@ -25,7 +23,6 @@ services:
 
   #proxy reverso
   proxy_reverso:
-    command: sh -c "ip route replace default via 10.0.0.5"
     #si se entra al ip del proxy (http://10.0.0.20/) y se recarga (f5) hace round robin entre los servidores
 
     #ab -c 100 -n 10000 http://10.0.0.20/web2/
@@ -42,7 +39,6 @@ services:
 
   #proxy reverso
   web_cache:
-    command: sh -c "ip route replace default via 10.0.0.5"
     #si se entra al ip del proxy (http://10.0.0.20/) y se recarga (f5) hace round robin entre los servidores
 
     #ab -c 100 -n 10000 http://10.0.0.20/web2/
@@ -59,7 +55,6 @@ services:
 
   # Web server 1 | IP: 10.0.0.21
   web_server_1:
-    command: sh -c "ip route replace default via 10.0.0.5"
     #curl -H "Host: web1.local" localhost
     image: nginx
     volumes:
@@ -72,7 +67,6 @@ services:
 
   # Web server 1.2 | IP: 10.0.0.22 para probar el Round Robin del proxy reverso
   web_server_1_2:
-    command: sh -c "ip route replace default via 10.0.0.5"
     #curl -H "Host: web1.local" localhost
     image: nginx
     volumes:
@@ -85,7 +79,6 @@ services:
 
   # Web server 2 | IP: 10.0.1.21
   web_server_2:
-    command: sh -c "ip route replace default via 10.0.1.6"
     #curl -H "Host: web2.local" localhost
     image: nginx
     volumes:
@@ -104,7 +97,7 @@ services:
     depends_on:
       - dhcp1
     privileged: true
-    command: bash -c "ip route replace default via 10.0.0.5 && dhclient -s 10.0.0.4 -nw && tail -F duermase"
+    command: bash -c "dhclient -s 10.0.0.4 -nw && tail -F duermase"
     container_name: cliente1
 
   #cliente 2
@@ -115,12 +108,11 @@ services:
     depends_on:
       - dhcp1
     privileged: true
-    command: bash -c "ip route replace default via 10.0.1.6 && dhclient -s 10.0.1.5 -nw && tail -F duermase"
+    command: bash -c "dhclient -s 10.0.1.5 -nw && tail -F duermase"
     container_name: cliente2
   
   #DNS - https://www.techrepublic.com/article/how-to-define-dns-in-docker-containers/
   service:
-    command: sh -c "ip route replace default via 10.0.0.5"
     # sudo docker exec -it rabbitmq bash 
     # cat /etc/resolv.conf
     dns:

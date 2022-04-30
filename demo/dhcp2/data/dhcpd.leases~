@@ -15,25 +15,25 @@ lease 10.0.1.200 {
   set vendor-class-identifier = "udhcp 1.30.1";
 }
 lease 10.0.1.201 {
-  starts 6 2022/04/30 04:47:05;
-  ends 0 2022/05/01 04:47:05;
-  tstp 0 2022/05/01 04:47:05;
-  cltt 6 2022/04/30 04:47:05;
-  binding state active;
-  next binding state free;
-  rewind binding state free;
-  hardware ethernet 02:42:0a:00:01:02;
-  client-hostname "3708bbc6e0b8";
-}
-server-duid "\000\001\000\001)\375y\317\002B\012\000\001\005";
-
-lease 10.0.1.201 {
   starts 6 2022/04/30 04:50:34;
   ends 0 2022/05/01 04:50:34;
+  tstp 0 2022/05/01 04:50:34;
   cltt 6 2022/04/30 04:50:34;
   binding state active;
   next binding state free;
   rewind binding state free;
   hardware ethernet 02:42:0a:00:01:02;
   client-hostname "644588a39865";
+}
+server-duid "\000\001\000\001)\375y\317\002B\012\000\001\005";
+
+lease 10.0.1.201 {
+  starts 6 2022/04/30 05:01:15;
+  ends 0 2022/05/01 05:01:15;
+  cltt 6 2022/04/30 05:01:15;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 02:42:0a:00:01:02;
+  client-hostname "f926c39c657e";
 }
