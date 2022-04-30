@@ -69,10 +69,10 @@ ab -c 100 -n 10000 http://10.0.0.20/web2/
 ```
 
 Primero se hizo la prueba al web server 1 (el cual implementa el web cache) y después al web server 2 (el cual no tiene cache) y se obtuvieron los siguientes resultados:
-![imagen](https://github.com/JeanMarcoRU/202201-IC7602-Pr1/blob/main/pruebas/test1.jpeg)
+![image](https://user-images.githubusercontent.com/15478613/166093244-014f7908-96ba-4596-abe6-0659e6394259.png)
 En la imagen anterior se logra apreciar que la media del total de atención a las requests es de 8 ms.
 Ahora se muestran los resultados de la prueba realizada con el web server 2:
-![imagen](https://github.com/JeanMarcoRU/202201-IC7602-Pr1/blob/main/pruebas/test2.jpeg)
+![image](https://user-images.githubusercontent.com/15478613/166093257-817e2f6f-197b-44db-88c7-7474483d7c4e.png)
 Con esta prueba, la cual sitúa el tiempo promedio de atención a las requests en 11 ms, con lo cual queda en evidencia la mejoría.
 
 ## Recomendaciones
