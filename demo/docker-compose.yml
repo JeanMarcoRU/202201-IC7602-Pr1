@@ -86,7 +86,8 @@ services:
     privileged: true
     command: bash -c "dhclient -s 10.0.0.4 -nw && tail -F duermase"
     container_name: cliente1
-
+  #$ docker build -t cliente ./dhclient1 
+  #$ docker run --privileged --name clienteA --network=demo_LAN_Virtual_1 -d cliente bash -c "dhclient -s 10.0.0.4 -nw && tail -F duermase"
   #cliente 2
   cliente2:
     networks:
@@ -97,6 +98,8 @@ services:
     privileged: true
     command: bash -c "dhclient -s 10.0.1.5 -nw && tail -F duermase"
     container_name: cliente2
+  #$ docker build -t cliente ./dhclient2
+  #$ docker run --privileged --name clienteB --network=demo_LAN_Virtual_2 -d cliente bash -c "dhclient -s 10.0.1.5 -nw && tail -F duermase"
   
   #DNS - https://www.techrepublic.com/article/how-to-define-dns-in-docker-containers/
   service:
