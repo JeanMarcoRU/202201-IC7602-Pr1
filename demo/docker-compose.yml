@@ -129,7 +129,7 @@ services:
       - "8.8.8.9"   
     network_mode: "bridge" 
     image: rabbitmq:3-management #https://hub.docker.com/_/rabbitmq?tab=description
-    container_name: rabbitmq #https://github.com/docker-library/rabbitmq/blob/6e226fe8e99702c8726d5e7d5c5864e69548048d/3.10/ubuntu/management/Dockerfile
+    container_name: dns #https://github.com/docker-library/rabbitmq/blob/6e226fe8e99702c8726d5e7d5c5864e69548048d/3.10/ubuntu/management/Dockerfile
     hostname: rabbitmq
     expose:
       - 53/udp
