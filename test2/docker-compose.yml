@@ -1,0 +1,244 @@
+version: '3.7' #sudo docker-compose up -d
+
+services:
+  # DHCP 1 | IP: 10.0.0.4
+  dhcp1:
+    command: sh -c "ip route replace default via 10.0.0.5"
+    networks:
+      LAN_Virtual_1:
+        ipv4_address: 10.0.0.4
+    image: networkboot/dhcpd
+    restart: unless-stopped
+    volumes:
+      - ./dhcp1/data:/data
+
+  # DHCP 2 | IP: 10.0.1.5
+  dhcp2:
+    command: sh -c "ip route replace default via 10.0.1.6"
+    networks:
+      LAN_Virtual_2:
+        ipv4_address: 10.0.1.5
+    image: networkboot/dhcpd
+    restart: unless-stopped
+    volumes:
+      - ./dhcp2/data:/data
+
+  #proxy reverso
+  proxy_reverso:
+    command: sh -c "ip route replace default via 10.0.0.5"
+    #si se entra al ip del proxy (http://10.0.0.20/) y se recarga (f5) hace round robin entre los servidores
+
+    #ab -c 100 -n 10000 http://10.0.0.20/web2/
+
+    #web cache aqui, mejoria de casi un 50%
+    #ab -c 100 -n 10000 http://10.0.0.20/web1/ 
+
+    image: nginx #https://hub.docker.com/r/jwilder/nginx-proxy
+    volumes:
+      - ./proxy/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      LAN_Virtual_1:
+        ipv4_address: 10.0.0.20
+
+  #proxy reverso
+  web_cache:
+    command: sh -c "ip route replace default via 10.0.0.5"
+    #si se entra al ip del proxy (http://10.0.0.20/) y se recarga (f5) hace round robin entre los servidores
+
+    #ab -c 100 -n 10000 http://10.0.0.20/web2/
+
+    #web cache aqui, mejoria de casi un 50%
+    #ab -c 100 -n 10000 http://10.0.0.20/web1/ 
+
+    image: nginx #https://hub.docker.com/r/jwilder/nginx-proxy
+    volumes:
+      - ./proxy/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      LAN_Virtual_1:
+        ipv4_address: 10.0.0.7
+
+  # Web server 1 | IP: 10.0.0.21
+  web_server_1:
+    command: sh -c "ip route replace default via 10.0.0.5"
+    #curl -H "Host: web1.local" localhost
+    image: nginx
+    volumes:
+      - ./app:/usr/share/nginx/html
+    environment:
+      - VIRTUAL_HOST=web1.local
+    networks:
+      LAN_Virtual_1:
+        ipv4_address: 10.0.0.21
+
+  # Web server 1.2 | IP: 10.0.0.22 para probar el Round Robin del proxy reverso
+  web_server_1_2:
+    command: sh -c "ip route replace default via 10.0.0.5"
+    #curl -H "Host: web1.local" localhost
+    image: nginx
+    volumes:
+      - ./app2:/usr/share/nginx/html
+    environment:
+      - VIRTUAL_HOST=web2.local
+    networks:
+      LAN_Virtual_1:
+        ipv4_address: 10.0.0.22
+
+  # Web server 2 | IP: 10.0.1.21
+  web_server_2:
+    command: sh -c "ip route replace default via 10.0.1.6"
+    #curl -H "Host: web2.local" localhost
+    image: nginx
+    volumes:
+      - ./app2:/usr/share/nginx/html
+    environment:
+      - VIRTUAL_HOST=web2.1.local
+    networks:
+      LAN_Virtual_2:
+        ipv4_address: 10.0.1.21
+
+  #cliente 1
+  cliente1:    
+    networks:
+      - LAN_Virtual_1
+    build: ./dhclient1
+    depends_on:
+      - dhcp1
+    privileged: true
+    command: bash -c "ip route replace default via 10.0.0.5 && dhclient -s 10.0.0.4 -nw && tail -F duermase"
+    container_name: cliente1
+
+  #cliente 2
+  cliente2:
+    networks:
+      - LAN_Virtual_2
+    build: ./dhclient2
+    depends_on:
+      - dhcp1
+    privileged: true
+    command: bash -c "ip route replace default via 10.0.1.6 && dhclient -s 10.0.1.5 -nw && tail -F duermase"
+    container_name: cliente2
+  
+  #DNS - https://www.techrepublic.com/article/how-to-define-dns-in-docker-containers/
+  service:
+    command: sh -c "ip route replace default via 10.0.0.5"
+    # sudo docker exec -it rabbitmq bash 
+    # cat /etc/resolv.conf
+    dns:
+      - "8.8.8.8"
+      - "8.8.8.9"   
+    network_mode: "bridge" 
+    image: rabbitmq:3-management #https://hub.docker.com/_/rabbitmq?tab=description
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "15672:15672"
+    #networks:      
+    #  LAN_Virtual_1:        
+    #    ipv4_address: 10.0.0.3
+
+  router1:
+    build: 
+      context: ./router1
+      dockerfile: dockerFile
+    container_name: router1
+    privileged: true
+    command: sh -c "echo "net.ipv4.ip_forward=1" /etc/sysctl.conf && sysctl -p && iptables -t nat -A POSTROUTING -j MASQUERADE && iptables --append FORWARD --protocol udp --src 10.0.0.5 --jump ACCEPT &&
+      iptables --append FORWARD --protocol tcp --src 10.0.0.5 --sport 80 --jump ACCEPT &&
+      iptables --append FORWARD --protocol tcp --src 10.0.0.5 --sport 443 --jump ACCEPT &&
+      iptables --append INPUT --protocol tcp --src 10.0.0.5 --sport 80 --jump ACCEPT &&
+      iptables --append INPUT --protocol tcp --src 10.0.0.5 --sport 443 --jump ACCEPT &&
+      iptables --append INPUT --protocol tcp --src 10.0.0.5 --sport 3128 --jump ACCEPT &&
+      iptables --append INPUT --protocol tcp --src 10.0.0.5 --sport 8443 --jump ACCEPT &&
+      iptables --append INPUT --protocol udp --src 10.0.0.5 --sport 53 --jump ACCEPT &&
+      iptables --append INPUT --protocol tcp --src 10.0.0.5 --sport 53 --jump ACCEPT &&
+      iptables --append FORWARD --protocol tcp --src 10.0.0.5 --sport 80 --dst 10.0.0.20 --dport 80 --jump ACCEPT &&
+      iptables --append FORWARD --protocol tcp --src 10.0.0.5 --sport 443 --dst 10.0.0.20 --dport 443 --jump ACCEPT &&
+      iptables --append FORWARD --protocol tcp --src 10.0.0.5 --sport 3128 --dst 10.0.0.7 --jump ACCEPT &&
+      iptables --append FORWARD --protocol tcp --src 10.0.0.5 --sport 8443 --dst 10.0.0.10 --jump ACCEPT &&     
+      tail -f /dev/null"
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv4.tcp_timestamps=0
+    #volumes:
+    #  - "./router1/sysctl.conf:/etc/sysctl.conf"
+    ports:
+      - "80:80"
+      - "443:443"
+
+    networks:
+      host-bridge:
+      LAN_Virtual_1:
+        ipv4_address: 10.0.0.5
+        
+  router2:
+    build: 
+      context: ./router1
+      dockerfile: dockerFile
+    container_name: router2
+    privileged: true
+    command: sh -c "echo "net.ipv4.ip_forward=1" /etc/sysctl.conf && sysctl -p && iptables -t nat -A POSTROUTING -j MASQUERADE && ip route replace default via 10.0.0.5 && iptables --append FORWARD --protocol icmp --icmp-type any --src 10.0.1.6 --dst 10.0.0.5 --jump ACCEPT &&
+      iptables --append FORWARD --protocol tcp --src 10.0.1.6 --sport 80 --dst 10.0.0.5 --jump ACCEPT &&
+      iptables --append FORWARD --protocol tcp --src 10.0.1.6 --sport 443 --dst 10.0.0.5 --jump ACCEPT &&     
+      tail -f /dev/null"
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv4.tcp_timestamps=0
+    #volumes:
+    #  - "./router1/sysctl.conf:/etc/sysctl.conf"
+
+    networks:
+      host-bridge:
+      LAN_Virtual_2:
+        ipv4_address: 10.0.1.6
+
+
+  cliente3:
+    build: 
+      context: ./ubuntu
+      dockerfile: dockerFile
+    container_name: ubuntu
+    privileged: true
+    restart: on-failure
+    command: sh -c "ip route replace default via 10.0.0.5"
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    networks:
+      LAN_Virtual_1:  
+    
+
+# En caso de que se sobre-lapen las redes
+# sudo docker network ls
+# sudo docker network rm my_network
+volumes:
+  app: {}
+  app2: {}
+
+networks:
+  host-bridge:
+    name: Host bridge
+    driver: bridge
+    driver_opts:
+      parent: eth0
+    ipam:
+      driver: default
+  LAN_Virtual_1:
+    name: Vnet1
+    driver: macvlan
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.0.0/24
+  LAN_Virtual_2:
+    name: Vnet2
+    driver: macvlan
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.1.0/24

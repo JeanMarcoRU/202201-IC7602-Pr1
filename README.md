@@ -1,6 +1,6 @@
 # Proyecto I
 
-###### Jean Marco Rojas U. - 2015040717, Alonso Obando - 20000000000, Esteban - 2018104794
+###### Jean Marco Rojas U. - 2015040717, Alonso Obando - 2014006700, Esteban - 2018104794
 
 ![image](https://user-images.githubusercontent.com/15478613/162591470-a658ec42-2ce4-4e73-abef-aea8b82d2c0d.png)
 
@@ -57,7 +57,7 @@ Y observar en la penúltima línea del resultado de la ejecución anterior el IP
 Este contenedor tiene una funcionalidad particular la cual es que da respuesta de forma intercalada entre la página web 1 y la página web 2, por lo que cada vez que se accede al sitio con ip 10.0.0.20, la respuesta varía con respecto a la anterior, como se ilustra en las siguientes dos imágenes, este es el resultado de la primera consulta:
 ![imagen](https://github.com/JeanMarcoRU/202201-IC7602-Pr1/blob/main/pruebas/request1.jpeg)
 Y después recargando la página:
-![imagen](https://github.com/JeanMarcoRU/202201-IC7602-Pr1/blob/main/pruebas/request2.jpeg)
+![image](https://user-images.githubusercontent.com/15478613/166093183-75e9f221-beaf-42ab-8852-6be65a624282.png)
 
 ### Prueba del web cache
 
@@ -69,10 +69,10 @@ ab -c 100 -n 10000 http://10.0.0.20/web2/
 ```
 
 Primero se hizo la prueba al web server 1 (el cual implementa el web cache) y después al web server 2 (el cual no tiene cache) y se obtuvieron los siguientes resultados:
-![imagen](https://github.com/JeanMarcoRU/202201-IC7602-Pr1/blob/main/pruebas/test1.jpeg)
+![image](https://user-images.githubusercontent.com/15478613/166093244-014f7908-96ba-4596-abe6-0659e6394259.png)
 En la imagen anterior se logra apreciar que la media del total de atención a las requests es de 8 ms.
 Ahora se muestran los resultados de la prueba realizada con el web server 2:
-![imagen](https://github.com/JeanMarcoRU/202201-IC7602-Pr1/blob/main/pruebas/test2.jpeg)
+![image](https://user-images.githubusercontent.com/15478613/166093257-817e2f6f-197b-44db-88c7-7474483d7c4e.png)
 Con esta prueba, la cual sitúa el tiempo promedio de atención a las requests en 11 ms, con lo cual queda en evidencia la mejoría.
 
 ## Recomendaciones

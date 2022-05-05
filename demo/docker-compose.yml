@@ -2,7 +2,7 @@ version: '3.7' #sudo docker-compose up -d
 
 services:
   # DHCP 1 | IP: 10.0.0.4
-  dhcp1:
+  dhcp1:    
     networks:
       LAN_Virtual_1:
         ipv4_address: 10.0.0.4
@@ -34,11 +34,29 @@ services:
     volumes:
       - ./proxy/default.conf:/etc/nginx/conf.d/default.conf
     ports:
-      - "80:80"
-      - "443:443"
+      - "80:80" 
+      - "443:443" 
     networks:
       LAN_Virtual_1:
         ipv4_address: 10.0.0.20
+
+  #proxy reverso
+  web_cache:
+    #si se entra al ip del proxy (http://10.0.0.20/) y se recarga (f5) hace round robin entre los servidores
+
+    #ab -c 100 -n 10000 http://10.0.0.20/web2/
+
+    #web cache aqui, mejoria de casi un 50%
+    #ab -c 100 -n 10000 http://10.0.0.20/web1/ 
+
+    image: nginx #https://hub.docker.com/r/jwilder/nginx-proxy
+    volumes:
+      - ./proxy/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "3128:3128" 
+    networks:
+      LAN_Virtual_1:
+        ipv4_address: 10.0.0.7
 
   # Web server 1 | IP: 10.0.0.21
   web_server_1:
@@ -77,7 +95,7 @@ services:
         ipv4_address: 10.0.1.21
 
   #cliente 1
-  cliente1:
+  cliente1:    
     networks:
       - LAN_Virtual_1
     build: ./dhclient1
@@ -103,17 +121,22 @@ services:
   
   #DNS - https://www.techrepublic.com/article/how-to-define-dns-in-docker-containers/
   service:
-    # docker exec -it rabbitmq bash 
+    # sudo docker exec -it rabbitmq bash 
     # cat /etc/resolv.conf
     dns:
       - "8.8.8.8"
-      - "8.8.8.9"
-    network_mode: "bridge"
+      - "8.8.8.9"   
+    network_mode: "bridge" 
     image: rabbitmq:3-management #https://hub.docker.com/_/rabbitmq?tab=description
-    container_name: rabbitmq
+    container_name: rabbitmq #https://github.com/docker-library/rabbitmq/blob/6e226fe8e99702c8726d5e7d5c5864e69548048d/3.10/ubuntu/management/Dockerfile
     hostname: rabbitmq
-    ports:
-      - "15672:15672"
+    expose:
+      - 53/udp
+      - 53/tcp
+    #networks:      
+    #  LAN_Virtual_1:        
+    #    ipv4_address: 10.0.0.3
+    
 
 # En caso de que se sobre-lapen las redes
 # sudo docker network ls
@@ -125,7 +148,7 @@ volumes:
 # LANs Virtuales 1 y 2
 networks:
   # LAN virtual 1 10.0.0.0/24
-  LAN_Virtual_1:
+  LAN_Virtual_1:    
     ipam:
       config:
         - subnet: 10.0.0.0/24
