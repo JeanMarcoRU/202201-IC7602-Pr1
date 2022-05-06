@@ -37,7 +37,13 @@ docker-compose up -d
 ```
 
 Si se siguieron las instrucciones correctamente, comando anterior debería mostrar una salida en la que se muestra el proceso de creación y levantamiento de cada contenedor, se debe imprimir en verde la palabra "done" después de cada contenedor de la red.
-
+### Comandos utilizados para generar la configuración del vpn
+sudo docker pull kylemanna/openvpn
+docker run --rm -v $PWD:/etc/openvpn kylemanna/openvpn ovpn_genconfig -u tcp://10.0.2.15:8443
+docker run --rm -v $PWD:/etc/openvpn -it kylemanna/openvpn ovpn_initpki nopass
+docker run --rm -v $PWD:/etc/openvpn -it kylemanna/openvpn easyrsa build-client-full client nopass
+docker run --rm -v $PWD:/etc/openvpn kylemanna/openvpn ovpn_getclient client > client.ovpn
+docker run --name openvpn -v $PWD:/etc/openvpn -d -p 8443:8443/tcp --cap-add=NET_ADMIN --restart always kylemanna/openvpn
 ## Pruebas Realizadas
 
 ### Prueba del DHCP
