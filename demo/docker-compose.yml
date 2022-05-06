@@ -8,7 +8,6 @@ services:
       LAN_Virtual_1:
         ipv4_address: 10.0.0.4
     image: networkboot/dhcpd
-    restart: unless-stopped
     volumes:
       - ./dhcp1/data:/data
 
@@ -18,7 +17,6 @@ services:
       LAN_Virtual_2:
         ipv4_address: 10.0.1.5
     image: networkboot/dhcpd
-    restart: unless-stopped
     volumes:
       - ./dhcp2/data:/data
 
@@ -118,26 +116,7 @@ services:
     command: bash -c "dhclient -s 10.0.1.5 -nw && tail -F duermase"
     container_name: cliente2
   #$ docker build -t cliente ./dhclient2
-  #$ docker run --privileged --name clienteB --network=demo_LAN_Virtual_2 -d cliente bash -c "dhclient -s 10.0.1.5 -nw && tail -F duermase"
-  
-  #DNS - https://www.techrepublic.com/article/how-to-define-dns-in-docker-containers/
-  service:
-    # sudo docker exec -it rabbitmq bash 
-    # cat /etc/resolv.conf
-    dns:
-      - "8.8.8.8"
-      - "8.8.8.9"   
-    network_mode: "bridge" 
-    image: rabbitmq:3-management #https://hub.docker.com/_/rabbitmq?tab=description
-    container_name: dns #https://github.com/docker-library/rabbitmq/blob/6e226fe8e99702c8726d5e7d5c5864e69548048d/3.10/ubuntu/management/Dockerfile
-    hostname: rabbitmq
-    expose:
-      - 53/udp
-      - 53/tcp
-    #networks:      
-    #  LAN_Virtual_1:        
-    #    ipv4_address: 10.0.0.3
-    
+  #$ docker run --privileged --name clienteB --network=demo_LAN_Virtual_2 -d cliente bash -c "dhclient -s 10.0.1.5 -nw && tail -F duermase"   
 
   #cliente 1
   cliente1:
@@ -162,17 +141,9 @@ services:
     command: bash -c "dhclient -s 10.0.1.5 -nw && tail -F duermase"
     volumes:
       - ./dhclient2/environment:/etc/environment
-  
-  web_cache:
-    image: clue/polipo
-    networks:
-      LAN_Virtual_1:
-        ipv4_address: 10.0.0.7
-    ports:
-      - "8443:8443"
 
   #DNS - https://www.techrepublic.com/article/how-to-define-dns-in-docker-containers/
-  service:
+  dns:
     # docker exec -it rabbitmq bash 
     # cat /etc/resolv.conf
     dns:
@@ -180,11 +151,22 @@ services:
       - "8.8.8.9"
     network_mode: "bridge"
     image: rabbitmq:3-management #https://hub.docker.com/_/rabbitmq?tab=description
-    container_name: rabbitmq
+    container_name: dns
     hostname: rabbitmq
     ports:
       - "15672:15672"
-
+  vpn:
+    container_name: vpn
+    cap_add:
+      - NET_ADMIN
+    image: ubuntu
+    networks:
+      LAN_Virtual_2:
+        ipv4_address: 10.0.1.10
+    ports: 
+      - "8443:8443/tcp"
+    volumes:
+      - ./vpn/data:/etc/openvpn
 # En caso de que se sobre-lapen las redes
 # sudo docker network ls
 # sudo docker network rm my_network

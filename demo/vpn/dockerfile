@@ -1,0 +1,6 @@
+sudo docker pull kylemanna/openvpn
+docker run --rm -v $PWD:/etc/openvpn kylemanna/openvpn ovpn_genconfig -u tcp://51.195.60.120:8443
+docker run --rm -v $PWD:/etc/openvpn -it kylemanna/openvpn ovpn_initpki nopass
+docker run --rm -v $PWD:/etc/openvpn -it kylemanna/openvpn easyrsa build-client-full client nopass
+docker run --rm -v $PWD:/etc/openvpn kylemanna/openvpn ovpn_getclient client > client.ovpn
+docker run --name openvpn -v $PWD:/etc/openvpn -d -p 8443:8443/tcp --cat-add=NET_ADMIN --restart always kylemanna/openvpn
