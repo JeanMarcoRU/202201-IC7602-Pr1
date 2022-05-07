@@ -37,13 +37,50 @@ docker-compose up -d
 ```
 
 Si se siguieron las instrucciones correctamente, comando anterior debería mostrar una salida en la que se muestra el proceso de creación y levantamiento de cada contenedor, se debe imprimir en verde la palabra "done" después de cada contenedor de la red.
-### Comandos utilizados para generar la configuración del vpn
-sudo docker pull kylemanna/openvpn
-docker run --rm -v $PWD:/etc/openvpn kylemanna/openvpn ovpn_genconfig -u tcp://10.0.2.15:8443
-docker run --rm -v $PWD:/etc/openvpn -it kylemanna/openvpn ovpn_initpki nopass
-docker run --rm -v $PWD:/etc/openvpn -it kylemanna/openvpn easyrsa build-client-full client nopass
-docker run --rm -v $PWD:/etc/openvpn kylemanna/openvpn ovpn_getclient client > client.ovpn
-docker run --name openvpn -v $PWD:/etc/openvpn -d -p 8443:8443/tcp --cap-add=NET_ADMIN --restart always kylemanna/openvpn
+
+### Tutorial para montar el VPN
+
+Primero hay que ver el ip de la máquina sobre el que se quiere montar el servidor, esto con el siguiente comando:
+
+```
+host -4 myip.opendns.com resolver1.opendns.com
+```
+
+Después se procede a descargar el instalador de openvpn a través del siguiente comando:
+
+```
+wget https://git.io/vpn -O openvpn-install.sh
+```
+
+Después de completada la descarga se le deben dar permisos al bash y posteriormente ejecutarlo:
+
+```
+sudo chmod +x openvpn-install.sh
+sudo bash openvpn-install.sh
+```
+
+Durante la ejecución el programa le hará unas preguntas, entre ellas el ip sobre el que se montará servidor, protocolo de conexión (udp/tcp), el puerto y el servidor DNS a utilizar.
+Por último se solicitará un nombre para el cliente lo que generará un archivo con ese nombre que deberá ubicarse en el contenedor que será el cliente del servidor openvpn, esto se hace por medio del docker-compose montando el archivo generado como un volumen.
+Ya a este punto se puede verificar el funcionamiento del VPN por medio de las siguientes pruebas
+
+#### Prueba 1:
+
+Con el proyecto y el servidor vpn se ejecuta el siguiente comando:
+
+```
+sudo docker exec -it vpn ip r
+```
+
+Para verificar que el contenedor tiene de IP el correspondiente al servidor VPN.
+
+#### Prueba 2:
+
+```
+sudo docker exec -it vpn traceroute www.facebook.com
+```
+
+Esto debería mostrar cómo todo el tráfico de internet viaja directamente por el tunel montado con el VPN.
+
 ## Pruebas Realizadas
 
 ### Prueba del DHCP
