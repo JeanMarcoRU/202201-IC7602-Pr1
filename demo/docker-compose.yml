@@ -118,30 +118,6 @@ services:
   #$ docker build -t cliente ./dhclient2
   #$ docker run --privileged --name clienteB --network=demo_LAN_Virtual_2 -d cliente bash -c "dhclient -s 10.0.1.5 -nw && tail -F duermase"   
 
-  #cliente 1
-  cliente1:
-    networks:
-      - LAN_Virtual_1
-    build: ./dhclient1
-    depends_on:
-      - dhcp1
-    privileged: true
-    command: bash -c "dhclient -s 10.0.0.4 -nw && tail -F duermase"
-    volumes:
-      - ./dhclient1/environment:/etc/environment
-
-  #cliente 2
-  cliente2:
-    networks:
-      - LAN_Virtual_2
-    build: ./dhclient2
-    depends_on:
-      - dhcp1
-    privileged: true #Debe ser privilegiado para que dhclient no de error
-    command: bash -c "dhclient -s 10.0.1.5 -nw && tail -F duermase"
-    volumes:
-      - ./dhclient2/environment:/etc/environment
-
   #DNS - https://www.techrepublic.com/article/how-to-define-dns-in-docker-containers/
   dns:
     # docker exec -it rabbitmq bash 
@@ -156,10 +132,11 @@ services:
     ports:
       - "15672:15672"
   vpn:
+    privileged: true
     container_name: vpn
     cap_add:
       - NET_ADMIN
-    image: ubuntu
+    build: ./vpn
     networks:
       LAN_Virtual_2:
         ipv4_address: 10.0.1.10
@@ -167,7 +144,7 @@ services:
       - "8444:8443/tcp"
     volumes:
       - ./vpn/client.ovpn:/client.ovpn
-    command: bash -c "tail -F duermase"
+    command: bash -c "cp client.ovpn /etc/openvpn/client.conf && openvpn --client --config /etc/openvpn/client.conf && /etc/init.d/openvpn start && tail -F duermase"
 # En caso de que se sobre-lapen las redes
 # sudo docker network ls
 # sudo docker network rm my_network

@@ -6,5 +6,4 @@ RUN apt install -y traceroute
 RUN apt install -y telnet
 RUN apt install -y curl
 RUN apt install -y dnsutils
-RUN apt install openvpn
-RUN openvpn client.ovpn
+RUN apt install -y openvpn
