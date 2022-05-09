@@ -92,7 +92,8 @@ services:
     networks:
       LAN_Virtual_2:
         ipv4_address: 10.0.1.21
-        
+
+  # Router 1      
   router_1:
     build: 
       context: ./ubuntu #carpeta con el dockerfile
@@ -137,6 +138,8 @@ services:
         ipv4_address: 10.0.0.5
       internet:
         ipv4_address: 172.30.0.2
+
+  # Router 2  
   router_2:
     build: 
       context: ./ubuntu
@@ -163,6 +166,7 @@ services:
         ipv4_address: 10.0.1.4
       internet:
         ipv4_address: 172.30.0.4
+        
   #cliente 1
   cliente1:    
     networks:
