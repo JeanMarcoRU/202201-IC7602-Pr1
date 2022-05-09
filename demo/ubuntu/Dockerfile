@@ -5,4 +5,5 @@ RUN apt-get update && \
      apt-get install -y net-tools && \
      apt-get install -y iputils-ping && \
      apt install -y iproute2 && \
-     apt-get install traceroute
+     apt-get install traceroute && \
+     apt install apache2-utils
