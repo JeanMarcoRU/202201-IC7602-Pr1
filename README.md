@@ -107,6 +107,7 @@ Y después recargando la página:
 El web cache funciona para que no sea necesario trasmitir la totalidad de los datos de los sitios a los que se suelen hacer visitas, con lo que si se implementa este cache se lograrán tiempos de respuesta más bajos cuando las solicitudes al sitio sean reiteradas. En este contexto, se le enviaron 10000 requests en grupos de 100 por medio del software de testing llamado ApacheBench y del siguiente comando:
 
 ```
+sudo apt install apache2-utils
 ab -c 100 -n 10000 http://10.0.0.20/web1/
 ab -c 100 -n 10000 http://10.0.0.20/web2/
 ```
