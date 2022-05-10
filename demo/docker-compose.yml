@@ -196,7 +196,7 @@ services:
     depends_on:
       - dhcp1
     privileged: true
-    command: bash -c "dhclient -s 10.0.1.5 -nw && tail -F duermase"
+    command: bash -c "ip route replace default via 10.0.1.4 && dhclient -s 10.0.1.5 -nw && tail -F duermase"
     container_name: cliente2
   #$ docker build -t cliente ./dhclient2
   #$ docker run --privileged --name clienteB --network=demo_LAN_Virtual_2 -d cliente bash -c "dhclient -s 10.0.1.5 -nw && tail -F duermase"   
@@ -224,7 +224,7 @@ services:
       LAN_Virtual_2:
         ipv4_address: 10.0.1.10
     ports: 
-      - "8443:8443/tcp"
+      - "8444:8443/tcp"
     volumes:
       - ./vpn/client.ovpn:/client.ovpn
     command: bash -c "cp client.ovpn /etc/openvpn/client.conf && openvpn --client --config /etc/openvpn/client.conf && /etc/init.d/openvpn start && tail -F duermase"
