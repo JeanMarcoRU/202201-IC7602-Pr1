@@ -176,12 +176,15 @@ services:
   #cliente 1
   cliente1:    
     networks:
-      - LAN_Virtual_1
-    build: ./dhclient1
+      LAN_Virtual_1:
+        ipv4_address: 10.0.0.41
+    build: 
+      context: ./dhclient1
+      dockerfile: Dockerfile
     depends_on:
       - dhcp1
     privileged: true
-    command: bash -c "dhclient -s 10.0.0.4 -nw && tail -F duermase"
+    command: bash -c "ip route replace default via 10.0.0.5 && dhclient -s 10.0.0.4 -nw && tail -F duermase" 
     container_name: cliente1
   #$ docker build -t cliente ./dhclient1 
   #$ docker run --privileged --name clienteA --network=demo_LAN_Virtual_1 -d cliente bash -c "dhclient -s 10.0.0.4 -nw && tail -F duermase"
@@ -250,6 +253,8 @@ networks:
     ipam:
       config:
         - subnet: 172.30.0.0/16
+
+# docker exec -it nombre_contenedor bash
 
 #Hay que agregar a cada uno del los elementos dentro de la red que por defecto vayan al router 1 o 2: para eso se utiliza la siguiente linea de comando: 
 #command: >-

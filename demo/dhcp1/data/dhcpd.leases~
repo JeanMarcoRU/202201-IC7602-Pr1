@@ -5,25 +5,36 @@
 authoring-byte-order little-endian;
 
 lease 10.0.0.100 {
-  starts 1 2022/05/09 22:03:38;
-  ends 2 2022/05/10 22:03:38;
-  tstp 2 2022/05/10 22:03:38;
-  cltt 1 2022/05/09 22:03:38;
+  starts 2 2022/05/10 00:03:07;
+  ends 3 2022/05/11 00:03:07;
+  tstp 3 2022/05/11 00:03:07;
+  cltt 2 2022/05/10 00:03:07;
   binding state active;
   next binding state free;
   rewind binding state free;
   hardware ethernet 02:42:0a:00:00:02;
-  client-hostname "01b1f2396c96";
+  client-hostname "e6fe5088fd24";
+}
+lease 10.0.0.101 {
+  starts 2 2022/05/10 00:11:44;
+  ends 3 2022/05/11 00:11:44;
+  tstp 3 2022/05/11 00:11:44;
+  cltt 2 2022/05/10 00:11:44;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 02:42:0a:00:00:29;
+  client-hostname "553b78cca46a";
 }
 server-duid "\000\001\000\001*\014I\305\002B\012\000\000\004";
 
-lease 10.0.0.100 {
-  starts 1 2022/05/09 22:06:25;
-  ends 2 2022/05/10 22:06:25;
-  cltt 1 2022/05/09 22:06:25;
+lease 10.0.0.101 {
+  starts 2 2022/05/10 00:24:08;
+  ends 3 2022/05/11 00:24:08;
+  cltt 2 2022/05/10 00:24:08;
   binding state active;
   next binding state free;
   rewind binding state free;
-  hardware ethernet 02:42:0a:00:00:02;
-  client-hostname "8d6f7a7bf7ad";
+  hardware ethernet 02:42:0a:00:00:29;
+  client-hostname "d4d0ced1fd6a";
 }
