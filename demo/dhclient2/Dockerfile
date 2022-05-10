@@ -8,3 +8,4 @@ RUN apt install -y curl
 RUN apt install -y dnsutils
 RUN apt install -y isc-dhcp-client
 RUN dhclient -r eth0 -s 10.0.1.5
+RUN apt-get install -y traceroute

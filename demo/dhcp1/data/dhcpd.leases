@@ -16,25 +16,25 @@ lease 10.0.0.100 {
   client-hostname "e6fe5088fd24";
 }
 lease 10.0.0.101 {
-  starts 2 2022/05/10 00:27:58;
-  ends 3 2022/05/11 00:27:58;
-  tstp 3 2022/05/11 00:27:58;
-  cltt 2 2022/05/10 00:27:58;
-  binding state active;
-  next binding state free;
-  rewind binding state free;
-  hardware ethernet 02:42:0a:00:00:29;
-  client-hostname "b2a4c19bf208";
-}
-server-duid "\000\001\000\001*\014I\305\002B\012\000\000\004";
-
-lease 10.0.0.101 {
   starts 2 2022/05/10 00:33:05;
   ends 3 2022/05/11 00:33:05;
+  tstp 3 2022/05/11 00:33:05;
   cltt 2 2022/05/10 00:33:05;
   binding state active;
   next binding state free;
   rewind binding state free;
   hardware ethernet 02:42:0a:00:00:29;
   client-hostname "e1b28f25646b";
+}
+server-duid "\000\001\000\001*\014I\305\002B\012\000\000\004";
+
+lease 10.0.0.100 {
+  starts 2 2022/05/10 00:48:55;
+  ends 3 2022/05/11 00:48:55;
+  cltt 2 2022/05/10 00:48:55;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 02:42:0a:00:00:02;
+  client-hostname "00bf3de17e21";
 }
