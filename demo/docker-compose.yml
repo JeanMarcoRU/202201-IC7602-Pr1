@@ -65,6 +65,7 @@ services:
 
   # Web server 1 | IP: 10.0.0.21
   web_server_1:
+    command: sh -c " ip route replace default via 10.0.0.5"
     #curl -H "Host: web1.local" localhost
     image: nginx
     volumes:
